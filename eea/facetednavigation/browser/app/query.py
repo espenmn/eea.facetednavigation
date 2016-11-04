@@ -139,7 +139,12 @@ class FacetedQueryHandler(FolderView):
         # Let's fix this
         kwargs = dict((key.replace('[]', ''), val)
                       for key, val in kwargs.items())
-
+        
+        #fix for unicode error in indexes  
+        for key, val in kwargs.items():
+            if isinstance(val, str):
+                kwargs[key] = val.decode('utf-8')
+                      
         query = self.criteria(sort=sort, **kwargs)
         # We don't want to do an unnecessary sort for a counter query
         counter_query = kwargs.pop('counter_query', False)
